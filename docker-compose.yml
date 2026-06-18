@@ -16,7 +16,7 @@ services:
       - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
 
   app:
-    image: bhanine/student-management:latest
+    image: 3angour/student-management:latest
     ports:
       - "8089:8089"
     environment:

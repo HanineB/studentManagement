@@ -3,7 +3,7 @@ pipeline {
     environment {
         JAVA_HOME = '/usr/lib/jvm/java-21-openjdk-amd64'
         PATH = "${JAVA_HOME}/bin:${env.PATH}"
-        DOCKER_IMAGE = 'bhanine/student-management'
+        DOCKER_IMAGE = '3angour/student-management'
         DOCKER_TAG = "v${BUILD_NUMBER}"
         SONAR_HOST_URL = 'http://192.168.56.10:9000'
     }
@@ -44,7 +44,7 @@ pipeline {
         stage('Docker Push') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-cred',
+                    credentialsId: 'dockerhub-creds',
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
@@ -62,7 +62,7 @@ pipeline {
             steps {
                 sh 'kubectl apply -f k8s/mysql-deployment.yaml'
                 sh 'kubectl apply -f k8s/sonarqube-deployment.yaml'
-                sh "sed -i 's|image: bhanine/student-management:.*|image: ${DOCKER_IMAGE}:${DOCKER_TAG}|g' k8s/spring-deployment.yaml"
+                sh "sed -i 's|image: 3angour/student-management:.*|image: ${DOCKER_IMAGE}:${DOCKER_TAG}|g' k8s/spring-deployment.yaml"
                 sh 'kubectl apply -f k8s/spring-deployment.yaml'
                 sh 'kubectl rollout status deployment/student-management -n devops --timeout=300s'
                 sh 'kubectl rollout status deployment/mysql -n devops --timeout=300s'
